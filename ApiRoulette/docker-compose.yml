@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+  apiroulette:
+    image: ${DOCKER_REGISTRY-}apiroulette
+    build:
+      context: .
+      dockerfile: ApiRoulette/Dockerfile
+    ports:
+      - "8081:80"
+    environment:
+      - URLDB=redis:6379
+    depends_on:
+            - redis 
+  redis:
+    image: "redis:alpine"
+    command: redis-server
+    container_name: redis
+    ports:
+     - "6379:6379"
+  apiwager:
+    image: ${DOCKER_REGISTRY-}apiwager
+    build:
+      context: .
+      dockerfile: ApiWager/Dockerfile
+    ports:
+      - "8082:80"
+    environment:
+      - URLDB=redis:6379
+    depends_on:
+            - redis 
+  apicustomer:
+    image: ${DOCKER_REGISTRY-}apicustomer
+    build:
+      context: .
+      dockerfile: ApiCustomer/Dockerfile
+    ports:
+      - "8083:80"
+    environment:
+      - URLDB=redis:6379
+    depends_on:
+            - redis 
+
